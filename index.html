@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+    </head>
+    <body id="body">
+        <input type="file" style="display: none" id="filein">
+        <div style="position: absolute;">
+            <input type="text" id="nameOfDot" placeholder="dotName">
+            <button id="selectFileButton">Select image</button>
+            <button onclick="nextDot()">Start</button>
+            <p>Etsi: </p>
+            <p id="needed" style="font-size: 20px"></p>
+            <p id="report" style="font-size: 20px"></p>
+        </div>
+        <script src="svg.min.js"></script>
+        <script src="svg.panzoom.min.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
