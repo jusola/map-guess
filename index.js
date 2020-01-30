@@ -8,16 +8,20 @@ var needed = document.getElementById('needed');
 var zoomPoint = {x: 0, y: 0};
 var zoomLevel = 1;
 
+var mode = 0; //0=guess loc, 1=guess name
+
 var currentDot = {};
+
+var guesses = 0;
+var wrongs = 0;
 
 var dotName = document.getElementById('nameOfDot');
 var editMode = false;
 
 var dots = [];
+var currentDots = [];
 
 window.onload = function(){
-  var dotsIn = null;//localStorage.getItem('dots');
-  if(!dotsIn){
     loadJSON((res)=>{
       let newDots = JSON.parse(res);
       newDots.forEach(element => {
@@ -25,13 +29,6 @@ window.onload = function(){
         addDot(element.x, element.y, element.name);
       });
     });
-  }else{
-    let newDots = JSON.parse(dotsIn);
-    newDots.forEach(element => {
-      console.log("Adding dot", element);
-      addDot(element.x, element.y, element.name);
-    });
-  }
 };
 
 window.onkeyup = ev=>{
@@ -88,12 +85,14 @@ function addDot(x, y, name){
   dots.push({x: x, y:y, name: name});
   dotName.value = '';
   newCircle.click(()=>{
-    guess(name);
+    if(mode == 0){
+      guess(name);
+    }
   });
-  localStorage.setItem('dots', JSON.stringify(dots));
 }
 
 function guess(name){
+  guesses++;
   if(name == currentDot.name){
     nextDot();
     report.innerHTML = "oikein";
@@ -103,6 +102,7 @@ function guess(name){
     }, 3000);
     
   }else{
+    wrongs++;
     console.log("Wrong");
     report.innerHTML = "väärin";
     report.style.display = 'block';
@@ -116,7 +116,6 @@ function remove(name){
   dots = dots.filter((elem)=>{
     return elem.name != name;
   });
-  localStorage.setItem('dots', JSON.stringify(dots));
   location.reload();
 }
 
@@ -127,16 +126,32 @@ function clear(){
 }
 
 function nextDot(){
-  currentDot = dots[Math.floor(Math.random() * dots.length)];
-  needed.innerHTML = currentDot.name;
+  currentDots = currentDots.filter(elem=>{
+    console.log(elem);
+    console.log(currentDot);
+    return elem.name !== currentDot.name;
+  });
+  if(currentDots.length == 0){
+    document.getElementById('score').innerHTML = "Pisteet: "+(guesses-wrongs)+"/"+dots.length;
+    needed.innerHTML = "";
+  }else{
+    currentDot = currentDots[Math.floor(Math.random() * currentDots.length)];
+    needed.innerHTML = currentDot.name;
+  }
+  
+}
+
+function start(){
+  document.getElementById('score').innerHTML = "";
+  currentDots = Array.from(dots);
+  guesses = 0;
+  wrongs = 0;
+  console.log(currentDots);
+  nextDot();
 }
 
 function toggleEdit(){
   editMode = !editMode;
-}
-
-function loadFromFile(){
-
 }
 
 function downloadOBJ(){
@@ -149,16 +164,14 @@ function downloadOBJ(){
   downloadAnchorNode.remove();
 }
 
-
 function loadJSON(callback) {   
   var xobj = new XMLHttpRequest();
-      xobj.overrideMimeType("application/json");
-      xobj.open('GET', 'dots.json', true); // Replace 'my_data' with the path to your file
-     xobj.onreadystatechange = function () {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-          // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-          callback(xobj.responseText);
-        }
+  xobj.overrideMimeType("application/json");
+  xobj.open('GET', 'dots.json?'+ (new Date()).getTime(), true);
+  xobj.onreadystatechange = function () {
+    if (xobj.readyState == 4 && xobj.status == "200") {
+      callback(xobj.responseText);
+    }
   };
   xobj.send(null);  
 }
