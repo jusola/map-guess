@@ -105,7 +105,7 @@ function guess(name){
   if(match(name, currentDot.name)){
     nextDot();
     if(currentWrongs === 0){
-      currect++;
+      correct++;
     }
     currentWrongs = 0;
     report.innerHTML = "oikein";
