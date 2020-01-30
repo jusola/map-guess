@@ -16,7 +16,7 @@ var editMode = false;
 var dots = [];
 
 window.onload = function(){
-  var dotsIn = localStorage.getItem('dots');
+  var dotsIn = null;//localStorage.getItem('dots');
   if(!dotsIn){
     loadJSON((res)=>{
       let newDots = JSON.parse(res);
