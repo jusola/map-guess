@@ -2,9 +2,16 @@ var svg = SVG().addTo('#body').size('100%', '100%').panZoom({zoomMin: 0.5, zoomM
 var viewbox = svg.viewbox(0, 0, document.getElementById('body').clientWidth, document.getElementById('body').clientHeight);
 var input = document.getElementById('filein');
 var image = null;
+
+var mode0 = document.getElementById('mode0');
+var mode1 = document.getElementById('mode1');
+mode0.style.display = 'none';
+mode1.style.display = 'none';
 var report = document.getElementById('report');
 report.style.display = 'none';
 var needed = document.getElementById('needed');
+var dotName = document.getElementById('nameOfDot');
+
 var zoomPoint = {x: 0, y: 0};
 var zoomLevel = 1;
 
@@ -15,7 +22,6 @@ var currentDot = {};
 var guesses = 0;
 var wrongs = 0;
 
-var dotName = document.getElementById('nameOfDot');
 var editMode = false;
 
 var dots = [];
@@ -32,7 +38,10 @@ window.onload = function(){
 };
 
 window.onkeyup = ev=>{
-
+  console.log(ev);
+  if(ev.key == 'Enter' && mode == 1){
+    guess(dotName.value);
+  }
 };
 
 
@@ -82,7 +91,7 @@ function addDot(x, y, name){
   if(name == ''){
     return;
   }
-  dots.push({x: x, y:y, name: name});
+  dots.push({x: x, y:y, name: name, circle: newCircle});
   dotName.value = '';
   newCircle.click(()=>{
     if(mode == 0){
@@ -93,7 +102,7 @@ function addDot(x, y, name){
 
 function guess(name){
   guesses++;
-  if(name == currentDot.name){
+  if(match(name, currentDot.name)){
     nextDot();
     report.innerHTML = "oikein";
     report.style.display = 'block';
@@ -126,9 +135,12 @@ function clear(){
 }
 
 function nextDot(){
+  if(mode == 1){
+    if(currentDot.circle){
+      currentDot.circle.fill({color: '#ff0066', opacity: 0.5});
+    }
+  }
   currentDots = currentDots.filter(elem=>{
-    console.log(elem);
-    console.log(currentDot);
     return elem.name !== currentDot.name;
   });
   if(currentDots.length == 0){
@@ -138,17 +150,37 @@ function nextDot(){
     currentDot = currentDots[Math.floor(Math.random() * currentDots.length)];
     needed.innerHTML = currentDot.name;
   }
+  if(mode == 1){
+    dotName.value = '';
+    dotName.focus();
+    console.log(currentDot);
+    let box = viewbox.viewbox();
+    svg.animate().zoom(1);
+    svg.animate().zoom(4, {x: currentDot.x, y: currentDot.y});
+    currentDot.circle.fill({color: '#66ff00', opacity: 0.5});
+  }
   
 }
 
-function start(){
+function start(newMode){
   document.getElementById('score').innerHTML = "";
+  if(newMode === 0 || newMode === 1){
+    mode=newMode;
+  }
   currentDots = Array.from(dots);
+  if(mode == 0){
+    mode0.style.display = 'block';
+    mode1.style.display = 'none';
+  }else if(mode == 1){
+    mode1.style.display = 'block';
+    mode0.style.display = 'none';
+  }
   guesses = 0;
   wrongs = 0;
   console.log(currentDots);
   nextDot();
 }
+
 
 function toggleEdit(){
   editMode = !editMode;
@@ -180,5 +212,25 @@ svg.on('zoom', (ev)=>{
   zoomLevel = ev.detail.level;
   zoomPoint = ev.detail.focus;
 });
+
+function match(a, b){
+  a=a.replace(/ /g,'');
+  b=b.replace(/ /g,'');
+  console.log(a);
+  console.log(b);
+  a=a.replace(/ø/g, 'o');
+  b=b.replace(/ø/g, 'o');
+  console.log(a);
+  console.log(b);
+  a=a.toLowerCase();
+  b=b.toLowerCase();
+  console.log(a);
+  console.log(b);
+  a=a.split(',');
+  b=b.split(',');
+  console.log(a);
+  console.log(b);
+  return a.some(item => b.includes(item));
+}
 
 renderImage();

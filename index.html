@@ -7,17 +7,19 @@
     </head>
     <body id="body">
         <input type="file" style="display: none" id="filein">
-        <div style="position: absolute;">
-            <div id="mode1" style="display: none;">
-                <input type="text" id="nameOfDot" style="display: block" placeholder="Nimi">
-                <button id="guess" onclick="guessCurrent()">Arvaa</button>
-            </div>
+        <div id="mode1" style="display: none; position: absolute;bottom: 5%;left: 50%;transform: translate(-50%, -0);width: 50%;font-size: 24px;">
+            <input type="text" id="nameOfDot" style="display: block; width: 100%; font-size: 18px" placeholder="Kirjoita tähän paikan nimi">
+        </div>
+        <div style="position: absolute;" id="controls">
             <p id="score"></p>
             <button id="selectFileButton" style="display: none">Select image</button>
-            <button onclick="start()">Start</button>
-            <p>Etsi: </p>
-            <p id="needed" style="font-size: 20px"></p>
+            <button onclick="start(0)">Aloita (nimi annettu)</button>
+            <button onclick="start(1)">Aloita (paikka annettu)</button>
             <p id="report" style="font-size: 20px"></p>
+            <div id="mode0">
+                <p>Etsi: </p>
+                <p id="needed" style="font-size: 20px"></p>
+            </div>
         </div>
         <script src="svg.min.js"></script>
         <script src="svg.panzoom.min.js"></script>
