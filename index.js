@@ -77,7 +77,7 @@ svg.click(function(event) {
 });
 
 function addDot(x, y, name){
-  let newCircle = svg.circle(5).fill({color: '#f06', opacity: 0.25});
+  let newCircle = svg.circle(5).fill({color: '#ff0066', opacity: 0.25});
   newCircle.attr({ cx: x, cy: y });
   if(name == undefined){
     name = dotName.value;
