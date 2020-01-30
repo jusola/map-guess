@@ -164,6 +164,11 @@ function nextDot(){
 
 function start(newMode){
   document.getElementById('score').innerHTML = "";
+  if(mode == 1){
+    if(currentDot.circle){
+      currentDot.circle.fill({color: '#ff0066', opacity: 0.5});
+    }
+  }
   if(newMode === 0 || newMode === 1){
     mode=newMode;
   }
