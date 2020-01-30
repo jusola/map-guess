@@ -22,6 +22,8 @@ var currentDot = {};
 var guesses = 0;
 var wrongs = 0;
 
+var currentWrongs = 0;
+
 var editMode = false;
 
 var dots = [];
@@ -104,6 +106,7 @@ function guess(name){
   guesses++;
   if(match(name, currentDot.name)){
     nextDot();
+    currentWrongs = 0;
     report.innerHTML = "oikein";
     report.style.display = 'block';
     setTimeout(()=>{
@@ -111,7 +114,15 @@ function guess(name){
     }, 3000);
     
   }else{
-    wrongs++;
+    if(mode == 1){
+      wrongs++;
+      currentWrongs++;
+      dotName.value = '';
+      if(currentWrongs >= 3){
+        dotName.placeholder=currentDot.name;
+      }
+    }
+
     console.log("Wrong");
     report.innerHTML = "väärin";
     report.style.display = 'block';
@@ -152,6 +163,7 @@ function nextDot(){
   }
   if(mode == 1){
     dotName.value = '';
+    dotName.placeholder = 'Kirjoita tähän paikan nimi';
     dotName.focus();
     console.log(currentDot);
     let box = viewbox.viewbox();
