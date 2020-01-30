@@ -77,7 +77,7 @@ svg.click(function(event) {
 });
 
 function addDot(x, y, name){
-  let newCircle = svg.circle(5).fill('#f06');
+  let newCircle = svg.circle(5).fill({fill: '#f06', 'fill-opacity': 0.25});
   newCircle.attr({ cx: x, cy: y });
   if(name == undefined){
     name = dotName.value;
@@ -151,7 +151,6 @@ function downloadOBJ(){
 
 
 function loadJSON(callback) {   
-
   var xobj = new XMLHttpRequest();
       xobj.overrideMimeType("application/json");
       xobj.open('GET', 'dots.json', true); // Replace 'my_data' with the path to your file
