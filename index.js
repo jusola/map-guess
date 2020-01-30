@@ -19,8 +19,7 @@ var mode = 0; //0=guess loc, 1=guess name
 
 var currentDot = {};
 
-var guesses = 0;
-var wrongs = 0;
+var corrects = 0;
 
 var currentWrongs = 0;
 
@@ -103,9 +102,11 @@ function addDot(x, y, name){
 }
 
 function guess(name){
-  guesses++;
   if(match(name, currentDot.name)){
     nextDot();
+    if(currentWrongs === 0){
+      currect++;
+    }
     currentWrongs = 0;
     report.innerHTML = "oikein";
     report.style.display = 'block';
@@ -115,7 +116,6 @@ function guess(name){
     
   }else{
     if(mode == 1){
-      wrongs++;
       currentWrongs++;
       dotName.value = '';
       if(currentWrongs >= 3){
@@ -155,7 +155,7 @@ function nextDot(){
     return elem.name !== currentDot.name;
   });
   if(currentDots.length == 0){
-    document.getElementById('score').innerHTML = "Pisteet: "+(guesses-wrongs)+"/"+dots.length;
+    document.getElementById('score').innerHTML = "Pisteet: "+corrects+"/"+dots.length;
     needed.innerHTML = "";
   }else{
     currentDot = currentDots[Math.floor(Math.random() * currentDots.length)];
