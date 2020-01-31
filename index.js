@@ -103,9 +103,8 @@ function addDot(x, y, name){
 
 function guess(name){
   if(match(name, currentDot.name)){
-    nextDot();
     if(currentWrongs === 0){
-      corrects = corrects+1;
+      corrects++;
     }
     currentWrongs = 0;
     report.innerHTML = "oikein";
@@ -113,6 +112,7 @@ function guess(name){
     setTimeout(()=>{
       report.style.display = 'none';
     }, 3000);
+    nextDot();
     
   }else{
     if(mode == 1){
@@ -151,9 +151,7 @@ function nextDot(){
       currentDot.circle.fill({color: '#ff0066', opacity: 0.5});
     }
   }
-  currentDots = currentDots.filter(elem=>{
-    return elem.name !== currentDot.name;
-  });
+  currentDot = null;
   if(currentDots.length == 0){
     document.getElementById('score').innerHTML = "Pisteet: "+corrects+"/"+dots.length;
     needed.innerHTML = "";
@@ -161,15 +159,20 @@ function nextDot(){
     currentDot = currentDots[Math.floor(Math.random() * currentDots.length)];
     needed.innerHTML = currentDot.name;
   }
+  currentDots = currentDots.filter(elem=>{
+    return elem.name !== currentDot.name;
+  });
   if(mode == 1){
     dotName.value = '';
     dotName.placeholder = 'Kirjoita tähän paikan nimi';
     dotName.focus();
     console.log(currentDot);
-    let box = viewbox.viewbox();
+    let box = viewbox.viewbox(); 
     svg.animate().zoom(1);
-    svg.animate().zoom(4, {x: currentDot.x, y: currentDot.y});
-    currentDot.circle.fill({color: '#66ff00', opacity: 0.5});
+    if(currentDot){
+      svg.animate().zoom(4, {x: currentDot.x, y: currentDot.y});
+      currentDot.circle.fill({color: '#66ff00', opacity: 0.5});
+    }
   }
   
 }
