@@ -147,9 +147,12 @@ function clear(){
 
 function nextDot(){
   if(mode == 1){
-    if(currentDot.circle){
-      currentDot.circle.fill({color: '#ff0066', opacity: 0.5});
+    if(currentDot){
+      if(currentDot.circle){
+        currentDot.circle.fill({color: '#ff0066', opacity: 0.5});
+      }
     }
+
   }
   currentDot = null;
   if(currentDots.length == 0){
